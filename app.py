@@ -32,7 +32,9 @@ def hide():
     image_url = url_for('static', filename=file_name, _external=True)
 
     return jsonify({
-        'image': f"{image_url}",
+        'data': {
+            'image': f"{image_url}"
+        },
     })
 
 
@@ -48,7 +50,9 @@ def reveal():
     hidden_message = vigenere_decrypt(hidden_message, key)
 
     return jsonify({
-        'message': f"{hidden_message}"
+        'data': {
+            'message': f"{hidden_message}"
+        }
     })
 
 
