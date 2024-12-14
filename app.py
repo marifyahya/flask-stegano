@@ -1,8 +1,10 @@
-from flask import Flask, request, send_file, jsonify
+from flask import Flask, request, send_file, jsonify, url_for
 from stegano import lsb
 from vigenerer_chiper import *
+from uuid import uuid4
 
 app = Flask(__name__)
+
 
 @app.route('/')
 def home():
@@ -11,12 +13,13 @@ def home():
     })
 
 
-@app.route('/hide', methods=['POST'])
+@app.route('/api/hide', methods=['POST'])
 def hide():
     message = request.form['message']
     key = request.form['key']
     image = request.files['image']
-    image_path = 'static/hidden_image.png'
+    file_name = 'image_' + str(uuid4()) + '.png'
+    image_path = 'static/' + file_name
 
     # Encrypt text
     message = vigenere_encrypt(message, key)
@@ -25,10 +28,15 @@ def hide():
     secret_image = lsb.hide(image.stream, message)
     secret_image.save(image_path)
 
-    return send_file(image_path)
+    # return send_file(image_path)
+    image_url = url_for('static', filename=file_name, _external=True)
+
+    return jsonify({
+        'image': f"{image_url}",
+    })
 
 
-@app.route('/reveal', methods=['POST'])
+@app.route('/api/reveal', methods=['POST'])
 def reveal():
     key = request.form['key']
     image = request.files['image']

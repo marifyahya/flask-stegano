@@ -1,52 +1,40 @@
-def vigenere_encrypt(plaintext, keyword):
-    alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '
-    keyword = keyword.upper()
-    plaintext = plaintext.upper()
-    encrypted_text = []
+def vigenere_encrypt(plaintext, key):
+    encrypted_text = ""
+    key = key.upper()
+    key_length = len(key)
+    key_index = 0
 
-    keyword_repeated = ''
-    keyword_index = 0
-    for i in range(len(plaintext)):
-        if plaintext[i] in alphabet:
-            keyword_repeated += keyword[keyword_index]
-            keyword_index = (keyword_index + 1) % len(keyword)
+    for char in plaintext:
+        if char.isalpha():
+            shift = ord(key[key_index]) - ord('A')
+            if char.islower():
+                encrypted_char = chr((ord(char) - ord('a') + shift) % 26 + ord('a'))
+            else:
+                encrypted_char = chr((ord(char) - ord('A') + shift) % 26 + ord('A'))
+            encrypted_text += encrypted_char
+            key_index = (key_index + 1) % key_length
         else:
-            keyword_repeated += plaintext[i]
+            encrypted_text += char
 
-    for i in range(len(plaintext)):
-        if plaintext[i] in alphabet:
-            text_index = alphabet.index(plaintext[i])
-            key_index = alphabet.index(keyword_repeated[i])
-            encrypted_index = (text_index + key_index) % len(alphabet)
-            encrypted_text.append(alphabet[encrypted_index])
+    return encrypted_text
+
+
+def vigenere_decrypt(ciphertext, key):
+    decrypted_text = ""
+    key = key.upper()
+    key_length = len(key)
+    key_index = 0
+
+    for char in ciphertext:
+        if char.isalpha():
+            shift = ord(key[key_index]) - ord('A')
+            if char.islower():
+                decrypted_char = chr((ord(char) - ord('a') - shift + 26) % 26 + ord('a'))
+            else:
+                decrypted_char = chr((ord(char) - ord('A') - shift + 26) % 26 + ord('A'))
+            decrypted_text += decrypted_char
+            key_index = (key_index + 1) % key_length
         else:
-            encrypted_text.append(plaintext[i])
+            decrypted_text += char
 
-    return ''.join(encrypted_text)
-
-
-def vigenere_decrypt(ciphertext, keyword):
-    alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '
-    keyword = keyword.upper()
-    ciphertext = ciphertext.upper()
-    decrypted_text = []
-
-    keyword_repeated = ''
-    keyword_index = 0
-    for i in range(len(ciphertext)):
-        if ciphertext[i] in alphabet:
-            keyword_repeated += keyword[keyword_index]
-            keyword_index = (keyword_index + 1) % len(keyword)
-        else:
-            keyword_repeated += ciphertext[i]
-
-    for i in range(len(ciphertext)):
-        if ciphertext[i] in alphabet:
-            text_index = alphabet.index(ciphertext[i])
-            key_index = alphabet.index(keyword_repeated[i])
-            decrypted_index = (text_index - key_index) % len(alphabet)
-            decrypted_text.append(alphabet[decrypted_index])
-        else:
-            decrypted_text.append(ciphertext[i])
-
-    return ''.join(decrypted_text)
+    return decrypted_text
