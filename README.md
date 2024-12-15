@@ -27,7 +27,7 @@ curl --location --request POST '127.0.0.1:3000/api/hide' \
 --form 'key="secret"'
 ```
 
-Response Body Success :
+Response Success :
 
 ```bash
 {
@@ -36,6 +36,22 @@ Response Body Success :
   }
 }
 ```
+
+Response Failed Validation : 
+
+```bash
+{
+    "errors": {
+        "key": [
+            "Name is required."
+        ],
+        "message": [
+            "Message is required."
+        ]
+    }
+}
+```
+
 
 ## Extraction API
 
@@ -49,12 +65,24 @@ curl --location --request POST '127.0.0.1:3000/api/reveal' \
 --form 'key="secret"'
 ```
 
-Response Body Success : 
+Response Success : 
 
 ```bash
 {
   "data" : {
     "message" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
   }
+}
+```
+
+Response Failed Validation : 
+
+```bash
+{
+    "errors": {
+        "key": [
+            "Name is required."
+        ]
+    },
 }
 ```
